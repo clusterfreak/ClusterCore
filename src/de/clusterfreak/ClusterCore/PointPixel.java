@@ -3,7 +3,7 @@ package de.clusterfreak.ClusterCore;
 /**
  * Point with pixel coordinates
  *
- * @version 1.0.1 (2016-04-10)
+ * @version 1.0.2 (2020-05-24)
  * @author Thomas Heym
  */
 public class PointPixel {

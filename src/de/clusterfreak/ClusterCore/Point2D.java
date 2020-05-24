@@ -3,7 +3,7 @@ package de.clusterfreak.ClusterCore;
 /**
  * Point with 2D coordinates
  *
- * @version 1.3.1 (2016-04-10)
+ * @version 1.3.2 (2020-05-24)
  * @author Thomas Heym
  */
 public class Point2D {
