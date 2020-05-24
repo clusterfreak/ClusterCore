@@ -1,1 +1,1 @@
-# ClusterCore
+# ClusterCore 1.1.0
