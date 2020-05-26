@@ -1,3 +1,11 @@
 Manifest-Version: 1.0
-Main-Class: de.clusterfreak.ClusterTest.CoreTest
-
+Main-Class: de.clusterfreak.ClusterCore.CoreTest
+Package: de.clusterfreak.ClusterCore
+Created-By: Thomas Heym
+Name: de/clusterfreak/ClusterCore
+Specification-Title: Core classes for cluster analysis
+Specification-Version: 1.1.0
+Specification-Vendor: Clusterfreak
+Implementation-Title: de.clusterfreak.ClusterCore
+Implementation-Version: 2020-05-24
+Implementation-Vendor: Clusterfreak

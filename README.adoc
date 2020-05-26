@@ -1,9 +1,17 @@
 = ClusterCore
-### Version Information X.X.X (YYYY-MM-DD)
 
-= ClusterCore 1.1.0 (2020-05-24)
-* FuzzyCMeans 1.6.2 (2020-05-24)
-* PossibilisticCMeans 1.2.2 (2020-05-24)
-* Point2D 1.3.2 (2020-05-24)
-* PointPixel 1.0.2 (2020-05-24)
-* CoreTest 0.1.1 (2020-05-24)
+== ClusterCore 1.1.0 (2020-05-24)
+FuzzyCMeans 1.6.2 (2020-05-24) +
+PossibilisticCMeans 1.2.2 (2020-05-24) +
+Point2D 1.3.2 (2020-05-24) +
+PointPixel 1.0.2 (2020-05-24) +
+CoreTest 0.1.1 (2020-05-24) +
+
+[source]
+----
+ClusterCore 1.1.0
+
+FCM Test: ok
+PCM Test (1st pass): ok
+PCM Test (2nd pass): ok
+----

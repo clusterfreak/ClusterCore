@@ -1,11 +1,11 @@
-package de.clusterfreak.ClusterTest;
+package de.clusterfreak.ClusterCore;
 
 import de.clusterfreak.ClusterCore.FuzzyCMeans;
 import de.clusterfreak.ClusterCore.PossibilisticCMeans;
 
 /**
  *
- * Internal Core Tests
+ * Internal Core Self Tests
  *
  * @version 0.1.1 (2020-05-24)
  * @author Thomas Heym
@@ -13,7 +13,7 @@ import de.clusterfreak.ClusterCore.PossibilisticCMeans;
  */
 
 public class CoreTest {
-
+    
     private static double object[][] = { { 0.1, 0.3 }, { 0.1, 0.5 }, { 0.1, 0.7 }, { 0.7, 0.3 }, { 0.7, 0.7 },
             { 0.8, 0.5 }, { 0.9, 0.5 } };
     private static int cluster = 2;
@@ -43,9 +43,11 @@ public class CoreTest {
 
     public static void main(String[] args) {
 
+        System.out.println("\nClusterCore 1.1.0\n");
+
         FuzzyCMeans fcm = new FuzzyCMeans(object, cluster);
         vi = fcm.determineClusterCenters(true, false);
-        System.out.println("FCM Test ");
+        System.out.print("FCM Test: ");
         if (testReference(vi, fcmReference))
             System.out.println("ok");
         else
@@ -53,7 +55,7 @@ public class CoreTest {
 
         PossibilisticCMeans pcm = new PossibilisticCMeans(object, cluster, 1);
         vi = pcm.determineClusterCenters(true, false);
-        System.out.println("PCM Test 1. Durchlauf ");
+        System.out.print("PCM Test (1st pass): ");
         if (testReference(vi, pcm1Reference))
             System.out.println("ok");
         else
@@ -61,7 +63,7 @@ public class CoreTest {
 
         pcm = new PossibilisticCMeans(object, cluster, 2);
         vi = pcm.determineClusterCenters(true, false);
-        System.out.println("PCM Test 2. Durchlauf ");
+        System.out.print("PCM Test (2nd pass): ");
         if (testReference(vi, pcm2Reference))
             System.out.println("ok");
         else
