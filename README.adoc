@@ -7,6 +7,8 @@ Thomas Heym <thomas.heym@clusterfreak.de>
 == Core classes for cluster analysis - Java
 image::https://files.clusterfreak.com/ClusterCore.png[]
 
+Fuzzy-C-Means and Possibilistic-C-Means
+
 FuzzyCMeans 1.6.2 (2020-05-24) +
 PossibilisticCMeans 1.2.2 (2020-05-24) +
 Point2D 1.3.2 (2020-05-24) +
