@@ -167,7 +167,7 @@ public class PossibilisticCMeans {
                         ni[i] = 0.0;
                         miks[i] = 0.0;
                     }
-                    // ni = sum mik²*dik²
+                    // ni = sum mik&sup2;*dik&sup2;
                     for (int i = 0; i < mik.length; i++) {
                         for (int k = 0; k < vi.length; k++) {
                             double dik = Math
@@ -176,7 +176,7 @@ public class PossibilisticCMeans {
                             miks[k] += Math.pow(mik[i][k], 2);
                         }
                     }
-                    // ni = sum(mik²*dik²) / sum mik²
+                    // ni = sum(mik&sup2;*dik&sup2;) / sum mik&sup2;
                     for (int i = 0; i < vi.length; i++) {
                         ni[i] /= miks[i];
                     }

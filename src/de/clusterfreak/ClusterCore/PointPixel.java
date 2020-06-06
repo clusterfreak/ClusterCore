@@ -7,7 +7,7 @@ package de.clusterfreak.ClusterCore;
  * @author Thomas Heym
  */
 public class PointPixel {
-    public int x;
+    public int x = 0;
     public int y = 0;
 
     public PointPixel(int xi, int yi) {

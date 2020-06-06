@@ -13,7 +13,8 @@ import de.clusterfreak.ClusterCore.PossibilisticCMeans;
  */
 
 public class CoreTest {
-    
+
+    private static long timeBegin = System.currentTimeMillis();
     private static double object[][] = { { 0.1, 0.3 }, { 0.1, 0.5 }, { 0.1, 0.7 }, { 0.7, 0.3 }, { 0.7, 0.7 },
             { 0.8, 0.5 }, { 0.9, 0.5 } };
     private static int cluster = 2;
@@ -69,5 +70,7 @@ public class CoreTest {
         else
             System.out.println("error");
 
+        long timeEnd = System.currentTimeMillis() - timeBegin;
+        System.out.println(timeEnd+" ms");
     }
 }

@@ -7,7 +7,7 @@ package de.clusterfreak.ClusterCore;
  * @author Thomas Heym
  */
 public class Point2D {
-    public double x;
+    public double x = 0.0;
     public double y = 0.0;
 
     public Point2D(double xi, double yi) {
@@ -20,7 +20,7 @@ public class Point2D {
      *
      * @param pixelOffset
      *            pixel Offset
-     * @return PointPixel pixel point
+     * @return pixel point
      */
     public PointPixel toPointPixel(int pixelOffset) {
         PointPixel pointPixel = new PointPixel(0, 0);
