@@ -13,6 +13,7 @@ Point2D 1.3.2 (2020-05-24) +
 PointPixel 1.0.2 (2020-05-24) +
 CoreTest 0.1.1 (2020-05-24) +
 
+== Internal Self-Test
 .CoreTest Output
 [source]
 ----
