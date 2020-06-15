@@ -4,7 +4,13 @@
 Thomas Heym <thomas.heym@clusterfreak.de>
 1.1.0, 2020-05-24
 
+
 == Core classes for cluster analysis - Java
+image:https://img.shields.io/github/v/release/clusterfreak/ClusterCore?[]
+image:https://img.shields.io/github/repo-size/clusterfreak/ClusterCore?[]
+image:https://img.shields.io/github/last-commit/clusterfreak/ClusterCore?[]
+image:https://img.shields.io/github/license/clusterfreak/ClusterCore?[]
+
 image::https://files.clusterfreak.com/ClusterCore.png[]
 
 *Fuzzy-C-Means* and *Possibilistic-C-Means* Algorithms in an only marginally modified version from 2005.
