@@ -72,5 +72,6 @@ public class CoreTest {
 
         long timeEnd = System.currentTimeMillis() - timeBegin;
         System.out.println(timeEnd+" ms");
+        System.out.println(System.getProperty("os.name")+" "+System.getProperty("os.version")+" "+System.getProperty("os.arch"));
     }
 }
