@@ -6,6 +6,7 @@ Thomas Heym <thomas.heym@clusterfreak.de>
 
 
 == Core classes for cluster analysis - Java
+image:https://img.shields.io/maven-central/v/de.clusterfreak/ClusterCore.svg?label=Maven%20Central[]
 image:https://img.shields.io/github/v/release/clusterfreak/ClusterCore?[]
 image:https://img.shields.io/github/repo-size/clusterfreak/ClusterCore?[]
 image:https://img.shields.io/github/last-commit/clusterfreak/ClusterCore?[]
