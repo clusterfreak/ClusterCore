@@ -1,8 +1,8 @@
 :encoding: iso-8859-1
 :icons: font
-= ClusterCore 1.1.1 (2020-10-25)
+= ClusterCore 1.1.2 (2020-10-31)
 Thomas Heym <thomas.heym@clusterfreak.de>
-1.1.1, 2020-10-25
+1.1.2, 2020-10-31
 
 
 == Core classes for cluster analysis - Java
@@ -20,7 +20,7 @@ FuzzyCMeans 1.6.2 (2020-05-24) +
 PossibilisticCMeans 1.2.2 (2020-05-24) +
 Point2D 1.3.2 (2020-05-24) +
 PointPixel 1.0.2 (2020-05-24) +
-CoreTest 0.1.1 (2020-05-24) +
+CoreTest 0.1.2 (2020-10-31) +
 
 /images/sphere32.png
 
@@ -28,7 +28,7 @@ CoreTest 0.1.1 (2020-05-24) +
 .CoreTest Output
 [source]
 ----
-ClusterCore 1.1.1
+ClusterCore 1.1.2
 
 FCM Test: ok
 PCM Test (1st pass): ok
@@ -38,6 +38,9 @@ Mac OS X 10.15.7 x86_64
 ----
 
 == Release Notes
+=== 1.1.2 (2020-10-31)
+- CoreTest() Version Information #1
+
 === 1.1.1 (2020-10-25)
 - add /images/sphere32.png as Icon for Apps
 

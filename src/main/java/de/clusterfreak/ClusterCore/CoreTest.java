@@ -7,7 +7,7 @@ import de.clusterfreak.ClusterCore.PossibilisticCMeans;
  *
  * Internal Core Self Tests
  *
- * @version 0.1.1 (2020-05-24)
+ * @version 0.1.2 (2020-10-31)
  * @author Thomas Heym
  *
  */
@@ -44,7 +44,7 @@ public class CoreTest {
 
     public static void main(String[] args) {
 
-        System.out.println("\nClusterCore 1.1.0\n");
+        System.out.println("\nClusterCore 1.1.2\n");
 
         FuzzyCMeans fcm = new FuzzyCMeans(object, cluster);
         vi = fcm.determineClusterCenters(true, false);

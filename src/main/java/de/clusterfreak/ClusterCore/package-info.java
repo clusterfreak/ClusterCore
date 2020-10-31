@@ -1,7 +1,7 @@
 /**
  * Core classes for cluster analysis
  *
- * @version 1.1.1 (2020-10-25)
+ * @version 1.1.2 (2020-10-31)
  * @author Thomas Heym
  */
 
