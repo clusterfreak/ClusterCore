@@ -1,31 +1,24 @@
 package de.clusterfreak.ClusterCore;
 
-import de.clusterfreak.ClusterCore.FuzzyCMeans;
-import de.clusterfreak.ClusterCore.PossibilisticCMeans;
-
 /**
- *
  * Internal Core Self Tests
  *
- * @version 0.1.2 (2020-10-31)
  * @author Thomas Heym
- *
+ * @version 0.1.3 (2020-11-01)
  */
 
 public class CoreTest {
 
-    private static long timeBegin = System.currentTimeMillis();
-    private static double object[][] = { { 0.1, 0.3 }, { 0.1, 0.5 }, { 0.1, 0.7 }, { 0.7, 0.3 }, { 0.7, 0.7 },
-            { 0.8, 0.5 }, { 0.9, 0.5 } };
-    private static int cluster = 2;
-    private static double vi[][];
-    private static double fcmReference[][] = { { 0.147070835, 0.5 }, { 0.758778663, 0.5 } };
-    private static double pcm1Reference[][] = { { 0.102492638, 0.5 }, { 0.83065648, 0.5 } };
-    private static double pcm2Reference[][] = { { 0.10000244, 0.5 }, { 0.801756421, 0.5 } };
-    private static double delta = 0.000003;
+    private static final long timeBegin = System.currentTimeMillis();
+    private static final double[][] object = {{0.1, 0.3}, {0.1, 0.5}, {0.1, 0.7}, {0.7, 0.3}, {0.7, 0.7},
+            {0.8, 0.5}, {0.9, 0.5}};
+    private static final double[][] fcmReference = {{0.147070835, 0.5}, {0.758778663, 0.5}};
+    private static final double[][] pcm1Reference = {{0.102492638, 0.5}, {0.83065648, 0.5}};
+    private static final double[][] pcm2Reference = {{0.10000244, 0.5}, {0.801756421, 0.5}};
 
-    private static boolean testReference(double vi[][], double reference[][]) {
+    private static boolean testReference(double[][] vi, double[][] reference) {
         boolean test = true;
+        double delta = 0.000003;
         if ((Math.abs(vi[0][0] - reference[0][0]) < delta) && (Math.abs(vi[0][1] - reference[0][1]) < delta)) {
             if ((Math.abs(vi[1][0] - reference[1][0]) > delta) || (Math.abs(vi[1][1] - reference[1][1]) > delta)) {
                 test = false;
@@ -43,11 +36,11 @@ public class CoreTest {
     }
 
     public static void main(String[] args) {
+        System.out.println("\nClusterCore 1.1.3\n");
 
-        System.out.println("\nClusterCore 1.1.2\n");
-
+        int cluster = 2;
         FuzzyCMeans fcm = new FuzzyCMeans(object, cluster);
-        vi = fcm.determineClusterCenters(true, false);
+        double[][] vi = fcm.determineClusterCenters(true, false);
         System.out.print("FCM Test: ");
         if (testReference(vi, fcmReference))
             System.out.println("ok");
@@ -71,7 +64,7 @@ public class CoreTest {
             System.out.println("error");
 
         long timeEnd = System.currentTimeMillis() - timeBegin;
-        System.out.println(timeEnd+" ms");
-        System.out.println(System.getProperty("os.name")+" "+System.getProperty("os.version")+" "+System.getProperty("os.arch"));
+        System.out.println(timeEnd + " ms");
+        System.out.println(System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
     }
 }

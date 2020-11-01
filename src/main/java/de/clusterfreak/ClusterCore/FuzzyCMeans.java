@@ -4,7 +4,7 @@ import java.util.Vector;
 
 /**
  * Fuzzy-C-Means (FCM)
- * <P>
+ * <p>
  * Cluster analysis with Fuzzy-C-Means clustering algorithm
  *
  * <pre>
@@ -15,14 +15,14 @@ import java.util.Vector;
  * Step 5: optional - Repeat calculation (steps 2 to 4)
  * </PRE>
  *
- * @version 1.6.2 (2020-05-24)
+ * @version 1.6.3 (2020-11-01)
  * @author Thomas Heym
  */
 public class FuzzyCMeans {
     /**
-     * Quantity/number of clusters, initial value 2
+     * Quantity/number of clusters
      */
-    private int cluster = 2;
+    private final int cluster;
     /**
      * Euclidean distance norm, exponent, initial value 2
      */
@@ -34,34 +34,28 @@ public class FuzzyCMeans {
     /**
      * Each Object represents 1 cluster vi
      */
-    private double object[][];
+    private final double[][] object;
     /**
      * Cluster centers vi
      */
-    private double vi[][];
+    private final double[][] vi;
     /**
      * Complete search path
      */
-    private double viPath[][];
+    private double[][] viPath;
     /**
      * Partition matrix (Membership values of the k-th object to the i-th
      * cluster)
      */
-    private static double getMik[][];
-    /**
-     * When false return only the class centers
-     */
-    private static boolean path = false;
+    private static double[][] getMik;
 
     /**
      * Generates FCM-Object from a set of Points
      *
-     * @param object
-     *            Objects
-     * @param clusterCount
-     *            Number of clusters
+     * @param object       Objects
+     * @param clusterCount Number of clusters
      */
-    public FuzzyCMeans(double object[][], int clusterCount) {
+    public FuzzyCMeans(double[][] object, int clusterCount) {
         this.object = object;
         this.cluster = clusterCount;
         this.vi = new double[cluster][2];
@@ -70,14 +64,11 @@ public class FuzzyCMeans {
     /**
      * Generates FCM-Object from a set of Points
      *
-     * @param object
-     *            Objects
-     * @param clusterCount
-     *            Number of clusters
-     * @param e
-     *            Termination threshold, initial value 1.0e-7
+     * @param object       Objects
+     * @param clusterCount Number of clusters
+     * @param e            Termination threshold, initial value 1.0e-7
      */
-    public FuzzyCMeans(double object[][], int clusterCount, double e) {
+    public FuzzyCMeans(double[][] object, int clusterCount, double e) {
         this.object = object;
         this.cluster = clusterCount;
         this.vi = new double[cluster][2];
@@ -87,19 +78,19 @@ public class FuzzyCMeans {
     /**
      * Returns the cluster centers
      *
-     * @param random
-     *            random initialization
-     * @param returnPath
-     *            Determines whether return the complete search path. Values:
-     *            <code>true</code>, <code>false</code>
+     * @param random     random initialization
+     * @param returnPath Determines whether return the complete search path. Values:
+     *                   <code>true</code>, <code>false</code>
      * @return Cluster centers and serarch path (optional); The cluster centers
-     *         are at the end.
+     * are at the end.
      */
     public double[][] determineClusterCenters(boolean random, boolean returnPath) {
         double euclideanDistance;
-        double mik[][] = new double[object.length][cluster];
-        path = returnPath;
-        Vector<Point2D> viPathRec = new Vector<Point2D>();
+        double[][] mik = new double[object.length][cluster];
+        /*
+         * When false return only the class centers
+         */
+        Vector<Point2D> viPathRec = new Vector<>();
         // Step 1: Initialization
         if (random) {
             for (int i = 0; i < mik.length; i++) {
@@ -125,7 +116,7 @@ public class FuzzyCMeans {
             // Step 2: Determination of the cluster centers
             // --> Step 5: optional - Repeat calculation (steps 2 to 4)
             for (int k = 0; k < vi.length; k++) {
-                double mikm = 0.0, mikm0 = 0.0, mikm1 = 0.0, mikms = 0.0;
+                double mikm, mikm0 = 0.0, mikm1 = 0.0, mikms = 0.0;
                 for (int i = 0; i < mik.length; i++) {
                     mikm = Math.pow(mik[i][k], m);
                     mikm0 += mikm * object[i][0];
@@ -136,20 +127,19 @@ public class FuzzyCMeans {
                 vi[k][1] = mikm1 / mikms;
             }
             // record cluster points
-            if (path == true) {
-                for (int k = 0; k < vi.length; k++)
-                    viPathRec.add(new Point2D(vi[k][0], vi[k][1]));
+            if (returnPath) {
+                for (double[] doubles : vi) viPathRec.add(new Point2D(doubles[0], doubles[1]));
             }
             // Step 3: Calculate the new partition matrix
-            double mik_before[][] = new double[mik.length][cluster];
+            double[][] mik_before = new double[mik.length][cluster];
             for (int k = 0; k < vi.length; k++) {
                 for (int i = 0; i < mik.length; i++) {
                     double dik = 0.0;
                     mik_before[i][k] = mik[i][k];
-                    for (int j = 0; j < vi.length; j++) {
+                    for (double[] doubles : vi) {
                         dik += Math.pow(
                                 1 / (Math.sqrt(
-                                        Math.pow(object[i][0] - vi[j][0], 2) + Math.pow(object[i][1] - vi[j][1], 2))),
+                                        Math.pow(object[i][0] - doubles[0], 2) + Math.pow(object[i][1] - doubles[1], 2))),
                                 1 / (m - 1));
                     }
                     mik[i][k] = Math.pow(1
@@ -172,8 +162,8 @@ public class FuzzyCMeans {
         // Step 4: Termination or repetition
         while (euclideanDistance >= e);
         getMik = mik;
-        if (path == true) {
-            double viPathCut[][] = new double[viPathRec.size()][2];
+        if (returnPath) {
+            double[][] viPathCut = new double[viPathRec.size()][2];
             for (int k = 0; k < viPathCut.length; k++) {
                 Point2D cut = viPathRec.elementAt(k);
                 viPathCut[k][0] = cut.x;
@@ -197,10 +187,9 @@ public class FuzzyCMeans {
     /**
      * Set partition matrix
      *
-     * @param setMik
-     *            partition matrix
+     * @param setMik partition matrix
      */
-    public static void setMik(double setMik[][]) {
+    public static void setMik(double[][] setMik) {
         getMik = setMik;
     }
 
@@ -216,9 +205,9 @@ public class FuzzyCMeans {
     /**
      * Set viPath
      *
-     * @param setViPath
+     * @param setViPath Set viPath
      */
-    private void setViPath(double setViPath[][]) {
+    private void setViPath(double[][] setViPath) {
         viPath = setViPath;
     }
 

@@ -4,7 +4,7 @@ import java.util.Vector;
 
 /**
  * Possivilistic-C-Means (PCM)
- * <P>
+ * <p>
  * Cluster analysis with Possivilistic-C-Means clustering algorithm
  *
  * <PRE>
@@ -15,15 +15,15 @@ import java.util.Vector;
  * Step 5: optional - Repeat calculation (steps 2 to 4)
  * </PRE>
  *
- * @version 1.2.2 (2020-05-24)
  * @author Thomas Heym
+ * @version 1.2.3 (2020-11-01)
  * @see FuzzyCMeans
  */
 public class PossibilisticCMeans {
     /**
-     * Quantity/number of clusters, initial value 2
+     * Quantity/number of clusters
      */
-    private int cluster = 2;
+    private final int cluster;
     /**
      * Euclidean distance norm, exponent, initial value 2
      */
@@ -35,49 +35,38 @@ public class PossibilisticCMeans {
     /**
      * Each Object represents 1 cluster vi
      */
-    private double object[][];
+    private final double[][] object;
     /**
      * Cluster centers vi
      */
-    private double vi[][];
+    private double[][] vi;
     /**
      * Complete search path
      */
-    private double viPath[][];
+    private double[][] viPath;
     /**
      * npcm
      */
-    private double ni[];
-    /**
-     * When false return only the class centers
-     */
-    private static boolean path = false;
-    /**
-     * Perform calculation of ni
-     */
-    private static boolean ni_calc = true;
+    private final double[] ni;
     /**
      * Number of PCM passes
      */
-    private int repeat = 1;
+    private int repeat;
     /**
      * Partition matrix (Membership values of the k-th object to the i-th
      * cluster)
      */
-    private static double getMik[][];
+    private static double[][] getMik;
 
     /**
      * Generates PCM-Object from a set of Points
      *
-     * @param object
-     *            Objects
-     * @param clusterCount
-     *            Number of clusters
-     * @param repeat
-     *            Number of PCM passes for determination of the cluster centers
+     * @param object       Objects
+     * @param clusterCount Number of clusters
+     * @param repeat       Number of PCM passes for determination of the cluster centers
      * @see FuzzyCMeans
      */
-    public PossibilisticCMeans(double object[][], int clusterCount, int repeat) {
+    public PossibilisticCMeans(double[][] object, int clusterCount, int repeat) {
         this.object = object;
         this.cluster = clusterCount;
         this.vi = new double[cluster][2];
@@ -88,17 +77,13 @@ public class PossibilisticCMeans {
     /**
      * Generates PCM-Object from a set of Points
      *
-     * @param object
-     *            Objects
-     * @param clusterCount
-     *            Number of clusters
-     * @param repeat
-     *            Number of PCM passes for determination of the cluster centers
-     * @param e
-     *            Termination threshold, initial value 1.0e-7
+     * @param object       Objects
+     * @param clusterCount Number of clusters
+     * @param repeat       Number of PCM passes for determination of the cluster centers
+     * @param e            Termination threshold, initial value 1.0e-7
      * @see FuzzyCMeans
      */
-    public PossibilisticCMeans(double object[][], int clusterCount, int repeat, double e) {
+    public PossibilisticCMeans(double[][] object, int clusterCount, int repeat, double e) {
         this.object = object;
         this.cluster = clusterCount;
         this.vi = new double[cluster][2];
@@ -110,18 +95,18 @@ public class PossibilisticCMeans {
     /**
      * Returns the cluster centers
      *
-     * @param random
-     *            random initialization
-     * @param returnPath
-     *            Determines whether return the complete search path. Values:
-     *            <code>true</code>, <code>false</code>
+     * @param random     random initialization
+     * @param returnPath Determines whether return the complete search path. Values:
+     *                   <code>true</code>, <code>false</code>
      * @return Cluster centers and serarch path (optional); The cluster centers
-     *         are at the end.
+     * are at the end.
      */
     public double[][] determineClusterCenters(boolean random, boolean returnPath) {
         double euclideanDistance;
-        path = returnPath;
-        Vector<Point2D> viPathRec = new Vector<Point2D>();
+        /*
+         * When false return only the class centers
+         */
+        Vector<Point2D> viPathRec = new Vector<>();
         // Step 1: Initialization
         FuzzyCMeans fcm;
         if (e == 1.0e-7) {
@@ -129,19 +114,21 @@ public class PossibilisticCMeans {
         } else {
             fcm = new FuzzyCMeans(object, cluster, e);
         }
-        double getViPath[][] = fcm.determineClusterCenters(random, true);
-        for (int v = 0; v < getViPath.length; v++)
-            viPathRec.add(new Point2D(getViPath[v][0], getViPath[v][1]));
+        double[][] getViPath = fcm.determineClusterCenters(random, true);
+        for (double[] doubles : getViPath) viPathRec.add(new Point2D(doubles[0], doubles[1]));
         vi = fcm.getVi();
-        double mik[][] = fcm.getMik();
+        double[][] mik = fcm.getMik();
         do { // while (repeat>0)
             repeat--;
-            ni_calc = true;
+            /*
+             * Perform calculation of ni
+             */
+            boolean ni_calc = true;
             do { // while (euclideanDistance>=e)
                 // Step 2: Determination of the cluster centers
                 // --> Step 5: optional - Repeat calculation (steps 2 to 4)
                 for (int k = 0; k < vi.length; k++) {
-                    double mikm = 0.0, mikm0 = 0.0, mikm1 = 0.0, mikms = 0.0;
+                    double mikm, mikm0 = 0.0, mikm1 = 0.0, mikms = 0.0;
                     for (int i = 0; i < mik.length; i++) {
                         mikm = Math.pow(mik[i][k], m);
                         mikm0 += mikm * object[i][0];
@@ -152,14 +139,13 @@ public class PossibilisticCMeans {
                     vi[k][1] = mikm1 / mikms;
                 }
                 // record cluster points
-                if (path == true) {
-                    for (int k = 0; k < vi.length; k++)
-                        viPathRec.add(new Point2D(vi[k][0], vi[k][1]));
+                if (returnPath) {
+                    for (double[] doubles : vi) viPathRec.add(new Point2D(doubles[0], doubles[1]));
                 }
                 // Step 3: Calculate the new partition matrix and ni
-                double mik_before[][] = new double[mik.length][cluster];
-                double miks[] = new double[vi.length];
-                if (ni_calc == true) {
+                double[][] mik_before = new double[mik.length][cluster];
+                double[] miks = new double[vi.length];
+                if (ni_calc) {
                     // Calulate ni (Distance from the class center to the point
                     // with a membership value of 0.5 to the actual cluster)
                     // initial ni = 0
@@ -207,8 +193,8 @@ public class PossibilisticCMeans {
         } while (repeat > 0);
         getMik = mik;
         // Value return
-        if (path == true) {
-            double viPathCut[][] = new double[viPathRec.size()][2];
+        if (returnPath) {
+            double[][] viPathCut = new double[viPathRec.size()][2];
             for (int k = 0; k < viPathCut.length; k++) {
                 Point2D cut = viPathRec.elementAt(k);
                 viPathCut[k][0] = cut.x;
@@ -232,10 +218,9 @@ public class PossibilisticCMeans {
     /**
      * Set partition matrix
      *
-     * @param setMik
-     *            partition matrix
+     * @param setMik partition matrix
      */
-    public static void setMik(double setMik[][]) {
+    public static void setMik(double[][] setMik) {
         getMik = setMik;
     }
 
@@ -251,9 +236,9 @@ public class PossibilisticCMeans {
     /**
      * Set viPath
      *
-     * @param setViPath
+     * @param setViPath Set viPath
      */
-    private void setViPath(double setViPath[][]) {
+    private void setViPath(double[][] setViPath) {
         viPath = setViPath;
     }
 
