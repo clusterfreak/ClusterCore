@@ -39,6 +39,7 @@ Mac OS X 11.3.1 aarch64
 
 == Release Notes
 === 1.1.4 (2021-05-13)
+- Javadoc Warnings #2
 - JavaDoc with Java 11, Apple M1 Mac Maven Deployment
 
 === 1.1.3 (2020-11-01)
