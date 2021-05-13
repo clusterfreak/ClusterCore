@@ -18,8 +18,8 @@ image::https://files.clusterfreak.com/ClusterCore.png[]
 
 FuzzyCMeans 1.6.3 (2020-11-01) +
 PossibilisticCMeans 1.2.3 (2020-11-01) +
-Point2D 1.3.2 (2020-05-24) +
-PointPixel 1.0.2 (2020-05-24) +
+Point2D 1.3.3 (2021-05-13) +
+PointPixel 1.0.3 (2021-05-13) +
 CoreTest 0.1.4 (2021-05-13) +
 
 /images/sphere32.png
@@ -39,8 +39,8 @@ Mac OS X 11.3.1 aarch64
 
 == Release Notes
 === 1.1.4 (2021-05-13)
-- Javadoc Warnings #2
-- JavaDoc with Java 11, Apple M1 Mac Maven Deployment
+- Javadoc Warnings #2 (CoreTest, Point2D, PointPixel)
+- JavaDoc with Java 11, maven-javadoc-plugin 3.2.0, Apple M1 Maven Deployment
 
 === 1.1.3 (2020-11-01)
 - Source Code Optimization (CoreTest, FuzzyCMeans, PossibilisticCMeans)

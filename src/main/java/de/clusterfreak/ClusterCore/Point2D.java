@@ -3,13 +3,24 @@ package de.clusterfreak.ClusterCore;
 /**
  * Point with 2D coordinates
  *
- * @version 1.3.2 (2020-05-24)
+ * @version 1.3.3 (2021-05-13)
  * @author Thomas Heym
  */
 public class Point2D {
+    /**
+     * x
+     */
     public double x = 0.0;
+    /**
+     * y
+     */
     public double y = 0.0;
 
+    /**
+     * Set Point2D
+     * @param xi x
+     * @param yi y
+     */
     public Point2D(double xi, double yi) {
         x = xi;
         y = yi;

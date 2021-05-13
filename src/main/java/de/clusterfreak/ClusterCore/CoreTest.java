@@ -35,6 +35,10 @@ public class CoreTest {
         return test;
     }
 
+    /**
+     * CoreTest.main
+     * @param args n/a
+     */
     public static void main(String[] args) {
         System.out.println("\nClusterCore 1.1.4\n");
 
