@@ -36,8 +36,18 @@ PCM Test (2nd pass): ok
 1 ms
 Mac OS X 11.3.1 aarch64
 ----
+Apache Maven Compiler Plugin 3.8.1 +
+Apache Maven Source Plugin 3.2.0 +
+Apache Maven Javadoc Plugin 3.2.0 +
+Apache Maven GPG Plugin 3.0.1 +
+Nexus Staging Maven Plugin 1.6.7
 
-== Release Notes
+== Release Notes (Rolling Release)
+=== 1.1.5 (in Progress)
+- Java 16
+- Apache Maven Source Plugin 3.2.0
+- Apache Maven GPG Plugin 3.0.1
+
 === 1.1.4 (2021-05-13)
 - Javadoc Warnings #2 (CoreTest, Point2D, PointPixel)
 - JavaDoc with Java 11, maven-javadoc-plugin 3.2.0, Apple M1 Maven Deployment
