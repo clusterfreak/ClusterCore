@@ -4,8 +4,8 @@ Package: de.clusterfreak.ClusterCore
 Created-By: Thomas Heym
 Name: de/clusterfreak/ClusterCore
 Specification-Title: Core classes for cluster analysis
-Specification-Version: 1.1.4
+Specification-Version: 1.1.5
 Specification-Vendor: Clusterfreak
 Implementation-Title: de.clusterfreak.ClusterCore
-Implementation-Version: 2021-05-13
+Implementation-Version: 2022-06-29
 Implementation-Vendor: Clusterfreak

@@ -1,9 +1,8 @@
 :encoding: iso-8859-1
 :icons: font
-= ClusterCore 1.1.4 (2021-05-13)
+= ClusterCore 1.1.5 (2022-06-29)
 Thomas Heym <thomas.heym@clusterfreak.de>
-1.1.4, 2021-05-13
-
+1.1.5, 2022-06-29
 
 == Core classes for cluster analysis - Java
 image:https://img.shields.io/maven-central/v/de.clusterfreak/ClusterCore.svg?label=Maven%20Central[]
@@ -20,7 +19,7 @@ FuzzyCMeans 1.6.3 (2020-11-01) +
 PossibilisticCMeans 1.2.3 (2020-11-01) +
 Point2D 1.3.3 (2021-05-13) +
 PointPixel 1.0.3 (2021-05-13) +
-CoreTest 0.1.4 (2021-05-13) +
+CoreTest 0.1.5 (2022-06-29) +
 
 /images/sphere32.png
 
@@ -28,29 +27,35 @@ CoreTest 0.1.4 (2021-05-13) +
 .CoreTest Output
 [source]
 ----
-ClusterCore 1.1.4
+ClusterCore 1.1.5
 
 FCM Test: ok
 PCM Test (1st pass): ok
 PCM Test (2nd pass): ok
 1 ms
-Mac OS X 11.3.1 aarch64
+Mac OS X 12.4 aarch64
 ----
-Apache Maven Compiler Plugin 3.8.1 +
+Apache Maven Compiler Plugin 3.10.1 +
 Apache Maven Source Plugin 3.2.0 +
-Apache Maven Javadoc Plugin 3.2.0 +
+Apache Maven Javadoc Plugin 3.4.0 +
 Apache Maven GPG Plugin 3.0.1 +
-Nexus Staging Maven Plugin 1.6.7
+Nexus Staging Maven Plugin 1.6.13
 
 == Release Notes (Rolling Release)
-=== 1.1.5 (in Progress)
-- Java 16
+=== 1.1.5 (2022-06-29)
+- Deployment Test Version
+- Java 18.0.1
+- Apache Maven Compiler Plugin 3.10.1
 - Apache Maven Source Plugin 3.2.0
+- Apache Maven Javadoc Plugin 3.4.0
 - Apache Maven GPG Plugin 3.0.1
+- Nexus Staging Maven Plugin 1.6.13
 
 === 1.1.4 (2021-05-13)
 - Javadoc Warnings #2 (CoreTest, Point2D, PointPixel)
-- JavaDoc with Java 11, maven-javadoc-plugin 3.2.0, Apple M1 Maven Deployment
+- JavaDoc with Java 11
+- Apache Maven Javadoc Plugin 3.2.0
+- Apple M1 Maven Deployment
 
 === 1.1.3 (2020-11-01)
 - Source Code Optimization (CoreTest, FuzzyCMeans, PossibilisticCMeans)
