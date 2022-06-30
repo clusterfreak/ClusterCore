@@ -49,9 +49,9 @@
 
   <!-- Java Version -->
   <properties>
-    <maven.compiler.release>18.0.1</maven.compiler.release>
-    <maven.compiler.source>18.0.1</maven.compiler.source>
-    <maven.compiler.target>18.0.1</maven.compiler.target>
+    <maven.compiler.release>18</maven.compiler.release>
+    <maven.compiler.source>18</maven.compiler.source>
+    <maven.compiler.target>18</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -82,7 +82,7 @@
         <configuration>
 
           <!-- source -->
-          <source>18.0.1</source>
+          <source>18</source>
 
           <detectJavaApiLink>false</detectJavaApiLink>
         </configuration>
