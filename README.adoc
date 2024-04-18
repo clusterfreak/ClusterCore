@@ -42,9 +42,10 @@ Apache Maven GPG Plugin 3.0.1 +
 Nexus Staging Maven Plugin 1.6.13
 
 == Release Notes (Rolling Release)
-=== 1.1.6
+=== 1.1.6 (in progress)
 - Java 21
 - README.adoc Link to c1f.de
+
 === 1.1.5 (2022-06-29)
 - Deployment Test Version
 - Java 18.0.1
