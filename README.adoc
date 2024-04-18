@@ -11,7 +11,7 @@ image:https://img.shields.io/github/repo-size/clusterfreak/ClusterCore?[]
 image:https://img.shields.io/github/last-commit/clusterfreak/ClusterCore?[]
 image:https://img.shields.io/github/license/clusterfreak/ClusterCore?[]
 
-image::https://files.clusterfreak.com/ClusterCore.png[]
+image::https://c1f.de/files/ClusterCore.png[]
 
 *Fuzzy-C-Means* and *Possibilistic-C-Means* Algorithms in an only marginally modified version from 2005.
 
@@ -42,6 +42,9 @@ Apache Maven GPG Plugin 3.0.1 +
 Nexus Staging Maven Plugin 1.6.13
 
 == Release Notes (Rolling Release)
+=== 1.1.6
+- Java 21
+- README.adoc Link to c1f.de
 === 1.1.5 (2022-06-29)
 - Deployment Test Version
 - Java 18.0.1
