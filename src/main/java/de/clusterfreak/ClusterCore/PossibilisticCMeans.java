@@ -1,11 +1,16 @@
 package de.clusterfreak.ClusterCore;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+import java.util.stream.IntStream;
 
 /**
- * Possivilistic-C-Means (PCM)
+ * Possibilistic-C-Means (PCM)
  * <p>
- * Cluster analysis with Possivilistic-C-Means clustering algorithm
+ * Cluster analysis with Possibilistic-C-Means clustering algorithm
  *
  * <PRE>
  * Step 1: Initialization
@@ -16,7 +21,7 @@ import java.util.Vector;
  * </PRE>
  *
  * @author Thomas Heym
- * @version 1.2.3 (2020-11-01)
+ * @version 1.3.0 (2024-12-07)
  * @see FuzzyCMeans
  */
 public class PossibilisticCMeans {
@@ -98,7 +103,7 @@ public class PossibilisticCMeans {
      * @param random     random initialization
      * @param returnPath Determines whether return the complete search path. Values:
      *                   <code>true</code>, <code>false</code>
-     * @return Cluster centers and serarch path (optional); The cluster centers
+     * @return Cluster centers and search path (optional); The cluster centers
      * are at the end.
      */
     public double[][] determineClusterCenters(boolean random, boolean returnPath) {
@@ -106,7 +111,7 @@ public class PossibilisticCMeans {
         /*
          * When false return only the class centers
          */
-        Vector<Point2D> viPathRec = new Vector<>();
+        List<Point2D> viPathRec = new ArrayList<>();
         // Step 1: Initialization
         FuzzyCMeans fcm;
         if (e == 1.0e-7) {
@@ -118,6 +123,7 @@ public class PossibilisticCMeans {
         for (double[] doubles : getViPath) viPathRec.add(new Point2D(doubles[0], doubles[1]));
         vi = fcm.getVi();
         double[][] mik = fcm.getMik();
+        ForkJoinPool pool = new ForkJoinPool();
         do { // while (repeat>0)
             repeat--;
             /*
@@ -127,7 +133,7 @@ public class PossibilisticCMeans {
             do { // while (euclideanDistance>=e)
                 // Step 2: Determination of the cluster centers
                 // --> Step 5: optional - Repeat calculation (steps 2 to 4)
-                for (int k = 0; k < vi.length; k++) {
+                IntStream.range(0, vi.length).parallel().forEach(k -> {
                     double mikm, mikm0 = 0.0, mikm1 = 0.0, mikms = 0.0;
                     for (int i = 0; i < mik.length; i++) {
                         mikm = Math.pow(mik[i][k], m);
@@ -137,55 +143,44 @@ public class PossibilisticCMeans {
                     }
                     vi[k][0] = mikm0 / mikms;
                     vi[k][1] = mikm1 / mikms;
-                }
+                });
                 // record cluster points
                 if (returnPath) {
                     for (double[] doubles : vi) viPathRec.add(new Point2D(doubles[0], doubles[1]));
                 }
                 // Step 3: Calculate the new partition matrix and ni
                 double[][] mik_before = new double[mik.length][cluster];
+                for (int i = 0; i < mik.length; i++) {
+                    System.arraycopy(mik[i], 0, mik_before[i], 0, cluster);
+                }
                 double[] miks = new double[vi.length];
                 if (ni_calc) {
-                    // Calulate ni (Distance from the class center to the point
+                    // Calculate ni (Distance from the class center to the point
                     // with a membership value of 0.5 to the actual cluster)
                     // initial ni = 0
-                    for (int i = 0; i < vi.length; i++) {
-                        ni[i] = 0.0;
-                        miks[i] = 0.0;
-                    }
+                    Arrays.fill(ni, 0.0);
+                    Arrays.fill(miks, 0.0);
                     // ni = sum mik&sup2;*dik&sup2;
-                    for (int i = 0; i < mik.length; i++) {
+                    IntStream.range(0, mik.length).parallel().forEach(i -> {
                         for (int k = 0; k < vi.length; k++) {
-                            double dik = Math
-                                    .sqrt(Math.pow(object[i][0] - vi[k][0], 2) + Math.pow(object[i][1] - vi[k][1], 2));
+                            double dik = Math.sqrt(Math.pow(object[i][0] - vi[k][0], 2) + Math.pow(object[i][1] - vi[k][1], 2));
                             ni[k] += Math.pow(Math.pow(mik[i][k], 2), 2) * Math.pow(dik, 2);
                             miks[k] += Math.pow(mik[i][k], 2);
                         }
-                    }
+                    });
                     // ni = sum(mik&sup2;*dik&sup2;) / sum mik&sup2;
                     for (int i = 0; i < vi.length; i++) {
                         ni[i] /= miks[i];
                     }
                     ni_calc = false;
                 }
-                for (int k = 0; k < vi.length; k++) {
-                    for (int i = 0; i < mik.length; i++) {
-                        mik_before[i][k] = mik[i][k];
-                        mik[i][k] = 1 / (1 + (Math.pow(
-                                Math.sqrt(Math.pow(object[i][0] - vi[k][0], 2) + Math.pow(object[i][1] - vi[k][1], 2)),
-                                2)) / ni[k]);
-                        // NaN-Error
-                        if (Double.isNaN(mik[i][k]))
-                            mik[i][k] = 1.0;
-                    }
-                }
+                pool.invoke(new UpdatePartitionMatrixTask(mik, vi, object, cluster, ni));
                 // calculate euclidean distance
-                euclideanDistance = 0.0;
-                for (int k = 0; k < vi.length; k++) {
-                    for (int i = 0; i < mik.length; i++) {
-                        euclideanDistance += Math.pow((mik[i][k] - mik_before[i][k]), 2);
-                    }
-                }
+                euclideanDistance = IntStream.range(0, vi.length).parallel().mapToDouble(k ->
+                        IntStream.range(0, mik.length).mapToDouble(i ->
+                                Math.pow((mik[i][k] - mik_before[i][k]), 2)
+                        ).sum()
+                ).sum();
                 euclideanDistance = Math.sqrt(euclideanDistance);
             }
             // Step 4: Termination or repetition
@@ -196,13 +191,43 @@ public class PossibilisticCMeans {
         if (returnPath) {
             double[][] viPathCut = new double[viPathRec.size()][2];
             for (int k = 0; k < viPathCut.length; k++) {
-                Point2D cut = viPathRec.elementAt(k);
+                Point2D cut = viPathRec.get(k);
                 viPathCut[k][0] = cut.x;
                 viPathCut[k][1] = cut.y;
             }
             setViPath(viPathCut);
         }
         return vi;
+    }
+
+    /**
+     * RecursiveTask for updating the partition matrix
+     */
+    private static class UpdatePartitionMatrixTask extends RecursiveTask<Void> {
+        private final double[][] mik;
+        private final double[][] vi;
+        private final double[][] object;
+        private final int cluster;
+        private final double[] ni;
+
+        public UpdatePartitionMatrixTask(double[][] mik, double[][] vi, double[][] object, int cluster, double[] ni) {
+            this.mik = mik;
+            this.vi = vi;
+            this.object = object;
+            this.cluster = cluster;
+            this.ni = ni;
+        }
+
+        @Override
+        protected Void compute() {
+            for (int k = 0; k < vi.length; k++) {
+                for (int i = 0; i < mik.length; i++) {
+                    mik[i][k] = 1 / (1 + (Math.pow(Math.sqrt(Math.pow(object[i][0] - vi[k][0], 2) + Math.pow(object[i][1] - vi[k][1], 2)), 2)) / ni[k]);
+                    if (Double.isNaN(mik[i][k])) mik[i][k] = 1.0;
+                }
+            }
+            return null;
+        }
     }
 
     /**

@@ -1,6 +1,9 @@
 package de.clusterfreak.ClusterCore;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * Fuzzy-C-Means (FCM)
@@ -15,7 +18,7 @@ import java.util.Vector;
  * Step 5: optional - Repeat calculation (steps 2 to 4)
  * </PRE>
  *
- * @version 1.6.3 (2020-11-01)
+ * @version 1.7.0 (2024-12-07)
  * @author Thomas Heym
  */
 public class FuzzyCMeans {
@@ -81,7 +84,7 @@ public class FuzzyCMeans {
      * @param random     random initialization
      * @param returnPath Determines whether return the complete search path. Values:
      *                   <code>true</code>, <code>false</code>
-     * @return Cluster centers and serarch path (optional); The cluster centers
+     * @return Cluster centers and search path (optional); The cluster centers
      * are at the end.
      */
     public double[][] determineClusterCenters(boolean random, boolean returnPath) {
@@ -90,7 +93,7 @@ public class FuzzyCMeans {
         /*
          * When false return only the class centers
          */
-        Vector<Point2D> viPathRec = new Vector<>();
+        List<Point2D> viPathRec = new ArrayList<>();
         // Step 1: Initialization
         if (random) {
             for (int i = 0; i < mik.length; i++) {
@@ -102,16 +105,14 @@ public class FuzzyCMeans {
             int s = 0;
             for (int i = 0; i < mik.length; i++) {
                 for (int k = 0; k < cluster; k++) {
-                    if (k == s)
-                        mik[i][k] = 1;
-                    else
-                        mik[i][k] = 0.0;
+                    mik[i][k] = (k == s) ? 1 : 0.0;
                 }
-                s++;
-                if (s == cluster)
-                    s = 0;
+                s = (s + 1) % cluster;
             }
         }
+
+        ForkJoinPool pool = new ForkJoinPool();
+
         do {
             // Step 2: Determination of the cluster centers
             // --> Step 5: optional - Repeat calculation (steps 2 to 4)
@@ -134,22 +135,10 @@ public class FuzzyCMeans {
             double[][] mik_before = new double[mik.length][cluster];
             for (int k = 0; k < vi.length; k++) {
                 for (int i = 0; i < mik.length; i++) {
-                    double dik = 0.0;
                     mik_before[i][k] = mik[i][k];
-                    for (double[] doubles : vi) {
-                        dik += Math.pow(
-                                1 / (Math.sqrt(
-                                        Math.pow(object[i][0] - doubles[0], 2) + Math.pow(object[i][1] - doubles[1], 2))),
-                                1 / (m - 1));
-                    }
-                    mik[i][k] = Math.pow(1
-                                    / (Math.sqrt(Math.pow(object[i][0] - vi[k][0], 2) + Math.pow(object[i][1] - vi[k][1], 2))),
-                            1 / (m - 1)) / dik;
-                    // NaN-Error
-                    if (Double.isNaN(mik[i][k]))
-                        mik[i][k] = 1.0;
                 }
             }
+            pool.invoke(new UpdatePartitionMatrixTask(mik, vi, object, cluster));
             // calculate euclidean distance
             euclideanDistance = 0.0;
             for (int k = 0; k < vi.length; k++) {
@@ -158,14 +147,13 @@ public class FuzzyCMeans {
                 }
             }
             euclideanDistance = Math.sqrt(euclideanDistance);
-        }
-        // Step 4: Termination or repetition
-        while (euclideanDistance >= e);
+            // Step 4: Termination or repetition
+        } while (euclideanDistance >= e);
         getMik = mik;
         if (returnPath) {
             double[][] viPathCut = new double[viPathRec.size()][2];
             for (int k = 0; k < viPathCut.length; k++) {
-                Point2D cut = viPathRec.elementAt(k);
+                Point2D cut = viPathRec.get(k);
                 viPathCut[k][0] = cut.x;
                 viPathCut[k][1] = cut.y;
             }
@@ -175,8 +163,40 @@ public class FuzzyCMeans {
     }
 
     /**
+     * RecursiveTask for updating the partition matrix
+     */
+    private static class UpdatePartitionMatrixTask extends RecursiveTask<Void> {
+        private final double[][] mik;
+        private final double[][] vi;
+        private final double[][] object;
+        private final int cluster;
+
+        public UpdatePartitionMatrixTask(double[][] mik, double[][] vi, double[][] object, int cluster) {
+            this.mik = mik;
+            this.vi = vi;
+            this.object = object;
+            this.cluster = cluster;
+        }
+
+        @Override
+        protected Void compute() {
+            for (int k = 0; k < vi.length; k++) {
+                for (int i = 0; i < mik.length; i++) {
+                    double dik = 0.0;
+                    for (double[] doubles : vi) {
+                        dik += Math.pow(1 / (Math.sqrt(Math.pow(object[i][0] - doubles[0], 2) + Math.pow(object[i][1] - doubles[1], 2))), 1 / (m - 1));
+                    }
+                    mik[i][k] = Math.pow(1 / (Math.sqrt(Math.pow(object[i][0] - vi[k][0], 2) + Math.pow(object[i][1] - vi[k][1], 2))), 1 / (m - 1)) / dik;
+                    if (Double.isNaN(mik[i][k])) mik[i][k] = 1.0;
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
      * Returns the partition matrix (Membership values of the k-th object to the
-     * i-th cluster) The method is also called from PossibilisticCMeans.
+     * i-th cluster) The method is also called from Pos±sibilisticCMeans.
      *
      * @return Partition matrix
      */

@@ -4,7 +4,7 @@ package de.clusterfreak.ClusterCore;
  * Internal Core Self Tests
  *
  * @author Thomas Heym
- * @version 0.1.5 (2022-06-29)
+ * @version 0.1.6 (2024-12-07)
  */
 
 public class CoreTest {
@@ -40,7 +40,7 @@ public class CoreTest {
      * @param args n/a
      */
     public static void main(String[] args) {
-        System.out.println("\nClusterCore 1.1.5\n");
+        System.out.println("\nClusterCore 1.2.0\n");
 
         int cluster = 2;
         FuzzyCMeans fcm = new FuzzyCMeans(object, cluster);
